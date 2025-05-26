@@ -4,7 +4,8 @@ This crate provides Rust bindings for Gurobi Optimizer.  It currently requires G
 
 This library started as fork of the [`gurobi`](https://github.com/ubnt-intrepid/rust-gurobi) which appears to be no longer maintained.  It has since undergone a number of fundamental API changes.
 
-This crate supports Gurobi 9.5, 10, 11 and 12.
+This crate supports Gurobi 10, 11 and 12.
+Gurobi 9.5 is also available, but not officially supported or tested.
 
 ## Installing and Linking
 
@@ -17,7 +18,7 @@ The `grb` crate requires one of the following feature flags to be set:
 - `gurobi12`
 - `gurobi11`
 - `gurobi10`
-- `gurobi9`
+- `gurobi9` (not tested, use at own discretion)
 
 The flag should match the major version of Gurobi, for example (in Cargo.toml):
 
