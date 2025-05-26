@@ -19,6 +19,7 @@ default = []
 gurobi12 = ["grb-sys_12"]
 gurobi11 = ["grb-sys_10"]
 gurobi10 = ["grb-sys_10"]
+gurobi9 = ["grb-sys_10"]
 
 
 [package.metadata.docs.rs]
