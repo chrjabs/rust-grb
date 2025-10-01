@@ -201,6 +201,19 @@ impl LinExpr {
     }
 }
 
+impl std::iter::FromIterator<(f64, Var)> for LinExpr {
+    fn from_iter<T>(iter: T) -> Self
+    where
+        T: IntoIterator<Item = (f64, Var)>,
+    {
+        let mut slf = Self::new();
+        for (coeff, var) in iter {
+            slf.add_term(coeff, var);
+        }
+        slf
+    }
+}
+
 impl QuadExpr {
     /// Create a new empty quadratic expression
     pub fn new() -> Self {
