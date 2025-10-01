@@ -10,11 +10,9 @@ mod private_traits {
     use super::*;
 
     pub trait ModelObjectPrivate: Sized + Hash + Eq + Copy {
-        fn from_raw(id: u32, model_id: u32) -> Self;
         fn idx_manager_mut(model: &mut Model) -> &mut IdxManager<Self>;
         fn idx_manager(model: &Model) -> &IdxManager<Self>;
         unsafe fn gurobi_remove(m: *mut ffi::GRBmodel, inds: &[i32]) -> ffi::c_int;
-        fn model_id(&self) -> u32;
     }
 }
 
@@ -31,6 +29,15 @@ use private_traits::ModelObjectPrivate;
 pub trait ModelObject: ModelObjectPrivate + Debug {
     /// Retrieve the object's ID.
     fn id(&self) -> u32;
+
+    /// Retrieves the ID of the model this object is associated with
+    fn model_id(&self) -> u32;
+
+    /// Manually constructs a new model object from an ID and model ID
+    ///
+    /// Note than when using this, the user has to guarantee that the object with the given ID
+    /// actually exists in the model.
+    fn from_raw(id: u32, model_id: u32) -> Self;
 }
 
 macro_rules! create_model_obj_ty {
@@ -43,10 +50,6 @@ macro_rules! create_model_obj_ty {
         }
 
         impl ModelObjectPrivate for $t {
-            fn from_raw(id: u32, model_id: u32) -> $t {
-                Self { id, model_id }
-            }
-
             fn idx_manager_mut(model: &mut Model) -> &mut IdxManager<$t> {
                 &mut model.$model_attr
             }
@@ -58,15 +61,19 @@ macro_rules! create_model_obj_ty {
             unsafe fn gurobi_remove(m: *mut ffi::GRBmodel, inds: &[i32]) -> ffi::c_int {
                 $delfunc(m, inds.len() as i32, inds.as_ptr())
             }
-
-            fn model_id(&self) -> u32 {
-                self.model_id
-            }
         }
 
         impl ModelObject for $t {
             fn id(&self) -> u32 {
                 self.id
+            }
+
+            fn model_id(&self) -> u32 {
+                self.model_id
+            }
+
+            fn from_raw(id: u32, model_id: u32) -> $t {
+                Self { id, model_id }
             }
         }
     };
