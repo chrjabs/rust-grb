@@ -325,6 +325,11 @@ impl Model {
         Env::DEFAULT_ENV.with(|env| Model::with_env(modelname, env))
     }
 
+    /// Gets the internal ID of the model
+    pub fn id(&self) -> u32 {
+        self.id
+    }
+
     /// Create a copy of the model.  This method is fallible due to the lazy update approach and the underlying
     /// Gurobi C API, so a [`Clone`] implementation is not provided.
     ///
